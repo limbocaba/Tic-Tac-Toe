@@ -19,9 +19,11 @@ const winningCondition = [
 ];
 
 
+
 function handleTile(tileClick, tileIndex) {
   gameBoard[tileIndex] = currentPlayer;
   tileClick.innerHTML = currentPlayer;
+
 }
 
 const playerTurn = () => `It's ${currentPlayer}'s turn`;
@@ -88,6 +90,11 @@ function handleTileClick(e) {
   }
   handleTile(tileClick, tileIndex);
   checkWinner();
+  if (currentPlayer == "X") {
+    e.target.style.background = "red";
+  } else {
+    e.target.style.background = "blue";
+  }
 }
 
 resetButton.addEventListener("click", resetGame);
