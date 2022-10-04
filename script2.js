@@ -1,13 +1,18 @@
 document.querySelectorAll('.tile').forEach((tile)=> tile.addEventListener('click', handleTileClick))
 const playerDisplay = document.querySelector(".display-player");
 const resetButton = document.querySelector("#reset");
-const announcer = document.querySelector(".announcer");
+const announcer = document.querySelector(".btmtxt");
 
 let gameBoard = ["", "", "", "", "", "", "", "", ""];
 let currentPlayer = "X";
 let isGameActive = true;
 
-const winningCondition = [
+const drawMessage = () => "Game has ended in a draw";
+const currentPlayerTurn = () => `It's ${currentPlayer}'s turn!`;
+const winMessage = () => `Player${currentPlayer} has won!`;
+
+
+const winningConditions = [
   [0, 1, 2],
   [3, 4, 5],
   [6, 7, 8],
@@ -21,16 +26,56 @@ const winningCondition = [
 
 
 function handleTile(tileClick, tileIndex) {
-  gameBoard[tileIndex] = currentPlayer;
-  tileClick.innerHTML = currentPlayer;
-
+  gameBoard[tileIndex] = currentPlayer; // might be [i]
+  tileClick.innerText = currentPlayer;
+console.log(gameBoard)
 }
 
-const playerTurn = () => `It's ${currentPlayer}'s turn`;
+function handlePlayerChange() {
+  currentPlayer === "X" ? "O" : "X"
+  announcer.innerText = currentPlayerTurn();
+} 
+
+function handleResultValidtaion() {
+  let roundWon = false;
+  for (let i = 0; i < winningConditions.length; i++) {
+    const winCondition = winningConditions[i]; // winCondition is = to all possible winning outcomes in the winningConditions array 
+    
+    let a = gameBoard[winCondition[0]];
+  
+    let b = gameBoard[winCondition[1]];
+    console.log(a, b, c);
+    let c = gameBoard[winCondition[2]];
+    if (a === "" || b === "" || c === "") {
+      continue;
+    }
+    if (a === b && b === c) {
+      roundWon = true;
+      console.log(roundWon)
+      break;
+    }
+  }
+  if (roundWon) {
+    announcer.innerHTML = winMessage();
+    isGameActive = false;
+    return;
+  }
+  let draw = !gameBoard.includes('')
+  if (draw) {
+    announcer.innerText = drawMessage();
+    console.log('It\'s a draw!')
+    isGameActive = false;
+    return;
+  }
+  handlePlayerChange();
+}
+
+
+announcer.innerText = currentPlayerTurn();
 
 function changePlayer() {
   currentPlayer = currentPlayer === "X" ? "O" : "X";
-  announcer.innerHTML = playerTurn();
+  announcer.innerText = currentPlayerTurn(); // this is whats showing at the bottom
 }
 
 const updateBoard = (index) => {
@@ -44,56 +89,24 @@ const updateBoard = (index) => {
 //   return true;
 // };
 
-const winMessage = () => `player${currentPlayer} has won!`;
 
 function checkWinner() {
-  let roundWon = false;
-  for (let i = 0; i < winningCondition.length; i++) {
-    let winCondition = winningCondition[i];
-    console.log(winCondition)
-    let a = gameBoard[winCondition[0]];
-    console.log(a)
-    let b = gameBoard[winCondition[1]];
-    console.log(b)
-    let c = gameBoard[winCondition[2]];
-    
-    if (a === "" || b === "" || c === "") {
-      continue;
-    }
-    if (a === b && b === c) {
-      roundWon = true;
-      console.log(roundWon)
-      break;
-    }
-    
-  }
-  if (roundWon) {
-    console.log(`Player ${currentPlayer} is the winner!`)
-    announcer.innerHTML = winMessage();
-    isGameActive = false;
-    return;
-  }
-  let draw = !gameBoard.includes('')
-  if (draw) {
-    console.log('It\'s a draw!')
-    isGameActive = false;
-    return;
-  }
   changePlayer()
 }
+
+
 function handleTileClick(e) {
   let tileClick = e.target;
   let tileIndex = parseInt(tileClick.dataset.index);
-  console.log(tileIndex);
   if (gameBoard[tileIndex] !== "" || !isGameActive) {
     return;
   }
   handleTile(tileClick, tileIndex);
   checkWinner();
   if (currentPlayer == "X") {
-    e.target.style.background = "red";
+    e.target.style.background = "pink";
   } else {
-    e.target.style.background = "blue";
+    e.target.style.background = "white";
   }
 }
 
@@ -103,7 +116,9 @@ function resetGame() {
   isGameActive = true;
   currentPlayer = "X";
   gameBoard = ["", "", "", "", "", "", "", "", ""];
-  document.querySelectorAll('.tile').forEach((tile) => (tile.innerHTML = ''))
-  // reset announcer 
+  announcer.innerText = currentPlayerTurn();
+  document.querySelectorAll('.tile').forEach((tile) => (tile.innerHTML = '', tile.style.background = "grey"))
+
+
 }
 
