@@ -46,17 +46,6 @@
   cursor: pointer;
 }
 
-.hide {
-  display: none;
-}
-
-.playerX {
-  color: pink;
-}
-
-.playerO {
-  color:  white;
-}
 
 #reset {
   background-color: #ff3860;
